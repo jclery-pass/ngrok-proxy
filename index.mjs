@@ -22,8 +22,9 @@ import { createServer } from 'vite';
 // Proxy server
 // =============================================================================
 
-const VITE_PORT = 5173;
 const PROXY_PORT = Number(process.argv[2]) || 1337;
+const VITE_PORT = 5173;
+const BACKEND_API_PORT = 5001;
 
 const app = express();
 const server = http.createServer(app);
@@ -56,8 +57,8 @@ server.on('upgrade', (req, socket, head) => {
 app.use(cors());
 app.use(morgan('dev'));
 
-app.use('/api', profixy('http://localhost:5001'));
-app.use('/', profixy('http://localhost:5173'));
+app.use('/api', profixy(`http://localhost:${BACKEND_API_PORT}`));
+app.use('/', profixy(`http://localhost:${VITE_PORT}`)); 
 
 server.listen(PROXY_PORT, () => console.log(`🌐 Proxy server listening on http://localhost:${PROXY_PORT}\n`));
 
